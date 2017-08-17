@@ -11,6 +11,7 @@ import Foundation
 
 class ViewController: UIViewController, UIWebViewDelegate {
 
+    @IBOutlet var loadingSpinner: UIActivityIndicatorView!
     @IBOutlet var toolBar: UIToolbar!
     @IBOutlet var webView: UIWebView!
     var forwardBtn: UIButton?
@@ -18,10 +19,10 @@ class ViewController: UIViewController, UIWebViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         webView.delegate = self
-        let url = NSURL (string: "https://home.mdnow.work/discharge");
-        let requestObj = NSURLRequest(url : url! as URL);
-        webView.loadRequest(requestObj as URLRequest);
-        
+        let url = NSURL (string: "https://home.mdnow.work/discharge")
+        let requestObj = NSURLRequest(url : url! as URL)
+        webView.loadRequest(requestObj as URLRequest)
+        loadingSpinner.hidesWhenStopped = true
         self.navigationController?.isToolbarHidden = false
         var items = [UIBarButtonItem]()
         items.append(
@@ -81,12 +82,12 @@ class ViewController: UIViewController, UIWebViewDelegate {
         self.toolBar.items = items
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func webViewDidStartLoad(_ webView: UIWebView){
+        loadingSpinner.startAnimating()
     }
     
     func webViewDidFinishLoad(_ webView: UIWebView) {
+        loadingSpinner.stopAnimating()
         if(!webView.canGoBack) {
             backBtn?.isEnabled = false
             backBtn?.isUserInteractionEnabled = false
@@ -123,6 +124,11 @@ class ViewController: UIViewController, UIWebViewDelegate {
         if (webView.canGoForward) {
             webView.goForward();
         }
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
 
 }

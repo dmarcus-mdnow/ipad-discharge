@@ -29,20 +29,26 @@
                                 <rect key="frame" x="0.0" y="718" width="1024" height="50"/>
                                 <items/>
                             </toolbar>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="sRi-pk-8Mf">
+                                <rect key="frame" x="502" y="374" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Gmr-KB-1MX" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="0x0-fb-6MT"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="W0N-9G-cfz" secondAttribute="bottom" constant="50" id="6M9-SX-cah"/>
+                            <constraint firstItem="sRi-pk-8Mf" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Hac-aI-WAs"/>
                             <constraint firstAttribute="trailing" secondItem="Gmr-KB-1MX" secondAttribute="trailing" id="beZ-jc-dru"/>
                             <constraint firstItem="W0N-9G-cfz" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="gk2-E7-ci4"/>
                             <constraint firstAttribute="trailing" secondItem="W0N-9G-cfz" secondAttribute="trailing" id="i80-GY-Uhc"/>
+                            <constraint firstItem="sRi-pk-8Mf" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="oDT-Tt-YbK"/>
                             <constraint firstItem="W0N-9G-cfz" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="20" id="uTC-er-itM"/>
                             <constraint firstItem="Gmr-KB-1MX" firstAttribute="top" secondItem="W0N-9G-cfz" secondAttribute="bottom" id="vsW-KF-DUw"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Gmr-KB-1MX" secondAttribute="bottom" id="xO9-ZQ-9D9"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="loadingSpinner" destination="sRi-pk-8Mf" id="KG2-xG-N1T"/>
                         <outlet property="toolBar" destination="Gmr-KB-1MX" id="JGA-36-GmI"/>
                         <outlet property="webView" destination="W0N-9G-cfz" id="ryn-sS-sZf"/>
                     </connections>
