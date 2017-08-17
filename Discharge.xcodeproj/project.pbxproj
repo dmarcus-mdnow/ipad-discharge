@@ -193,6 +193,7 @@
 				TargetAttributes = {
 					3B0E97641F44EB3900585524 = {
 						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = XVAQ5BQWKB;
 						ProvisioningStyle = Automatic;
 					};
 					3B0E97781F44EB3900585524 = {
@@ -414,6 +415,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = XVAQ5BQWKB;
 				INFOPLIST_FILE = Discharge/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mdnow.discharge.Discharge;
@@ -426,6 +428,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = XVAQ5BQWKB;
 				INFOPLIST_FILE = Discharge/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mdnow.discharge.Discharge;
