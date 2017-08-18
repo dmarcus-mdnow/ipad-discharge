@@ -8,20 +8,28 @@
 
 import UIKit
 import Foundation
+import WebKit
 
-class ViewController: UIViewController, UIWebViewDelegate {
+class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
 
     @IBOutlet var loadingSpinner: UIActivityIndicatorView!
     @IBOutlet var toolBar: UIToolbar!
-    @IBOutlet var webView: UIWebView!
     var forwardBtn: UIButton?
     var backBtn: UIButton?
+    let url = URL(string:"https://home.mdnow.work/discharge")
+    var webView: WKWebView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        webView.delegate = self
-        let url = NSURL (string: "https://home.mdnow.work/discharge")
-        let requestObj = NSURLRequest(url : url! as URL)
-        webView.loadRequest(requestObj as URLRequest)
+        webView = WKWebView(frame: CGRect( x: 0, y: 20, width: self.view.frame.width, height: self.view.frame.height - 70 ), configuration: WKWebViewConfiguration() )
+        webView.uiDelegate = self
+        webView.navigationDelegate = self
+        self.view.addSubview(webView)
+        let req = URLRequest(url:url!)
+        webView.load(req)
+        self.webView.allowsBackForwardNavigationGestures = true
+        loadingSpinner.activityIndicatorViewStyle = .whiteLarge
+        loadingSpinner.color = .gray
+        self.view.addSubview(loadingSpinner)
         loadingSpinner.hidesWhenStopped = true
         self.navigationController?.isToolbarHidden = false
         var items = [UIBarButtonItem]()
@@ -82,11 +90,11 @@ class ViewController: UIViewController, UIWebViewDelegate {
         self.toolBar.items = items
     }
     
-    func webViewDidStartLoad(_ webView: UIWebView){
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!){
         loadingSpinner.startAnimating()
     }
     
-    func webViewDidFinishLoad(_ webView: UIWebView) {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         loadingSpinner.stopAnimating()
         if(!webView.canGoBack) {
             backBtn?.isEnabled = false
@@ -105,9 +113,8 @@ class ViewController: UIViewController, UIWebViewDelegate {
     }
     
     @IBAction func pressDischarge() {
-        let url = NSURL (string: "https://home.mdnow.work/discharge");
-        let requestObj = NSURLRequest(url : url! as URL);
-        webView.loadRequest(requestObj as URLRequest);
+        let req = URLRequest(url:url!)
+        webView.load(req)
     }
     
     @IBAction func pressRefresh() {
@@ -123,6 +130,73 @@ class ViewController: UIViewController, UIWebViewDelegate {
     @IBAction func pressForward() {
         if (webView.canGoForward) {
             webView.goForward();
+        }
+    }
+    
+    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+        let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
+            completionHandler()
+        }))
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    
+    func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
+        let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
+            completionHandler(true)
+        }))
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action) in
+            completionHandler(false)
+        }))
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    
+    func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo,
+                 completionHandler: @escaping (String?) -> Void) {
+        let alertController = UIAlertController(title: nil, message: prompt, preferredStyle: .alert)
+        alertController.addTextField { (textField) in
+            textField.text = defaultText
+        }
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
+            if let text = alertController.textFields?.first?.text {
+                completionHandler(text)
+            } else {
+                completionHandler(defaultText)
+            }
+        }))
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action) in
+            completionHandler(nil)
+        }))
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void){
+        if(webView.url?.host == "companyweb") {
+            let alertController = UIAlertController(title: nil, message: "Log in to companyweb", preferredStyle: .alert)
+            alertController.addTextField { (textField) in
+                textField.placeholder = "User Name"
+            }
+            alertController.addTextField { (textField) in
+                textField.placeholder = "Password"
+                textField.isSecureTextEntry = true
+            }
+            alertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action) in
+                completionHandler(URLSession.AuthChallengeDisposition.cancelAuthenticationChallenge, nil)
+            }))
+            alertController.addAction(UIAlertAction(title: "Log In", style: .default, handler: { (action) in
+                if let user = alertController.textFields?.first?.text, let password = alertController.textFields?.last?.text {
+                    let credential = URLCredential(user:user, password:password, persistence:URLCredential.Persistence.none)
+                    completionHandler(URLSession.AuthChallengeDisposition.useCredential, credential)
+                } else {
+                    completionHandler(URLSession.AuthChallengeDisposition.cancelAuthenticationChallenge, nil)
+                }
+            }))
+            present(alertController, animated: true, completion: nil)
+        } else {
+            completionHandler(URLSession.AuthChallengeDisposition.performDefaultHandling, nil)
         }
     }
     
