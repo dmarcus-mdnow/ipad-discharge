@@ -174,7 +174,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
     }
     
     func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void){
-        if(webView.url?.host == "companyweb") {
+        if(challenge.protectionSpace.authenticationMethod == "NSURLAuthenticationMethodNTLM") {
             let alertController = UIAlertController(title: nil, message: "Log in to companyweb", preferredStyle: .alert)
             alertController.addTextField { (textField) in
                 textField.placeholder = "User Name"
