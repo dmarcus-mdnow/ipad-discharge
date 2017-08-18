@@ -18,6 +18,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
     var backBtn: UIButton?
     let url = URL(string:"https://home.mdnow.work/discharge")
     var webView: WKWebView!
+    var credential: URLCredential?
     override func viewDidLoad() {
         super.viewDidLoad()
         webView = WKWebView(frame: CGRect( x: 0, y: 20, width: self.view.frame.width, height: self.view.frame.height - 70 ), configuration: WKWebViewConfiguration() )
@@ -175,26 +176,30 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
     
     func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void){
         if(challenge.protectionSpace.authenticationMethod == "NSURLAuthenticationMethodNTLM") {
-            let alertController = UIAlertController(title: nil, message: "Log in to companyweb", preferredStyle: .alert)
-            alertController.addTextField { (textField) in
-                textField.placeholder = "User Name"
-            }
-            alertController.addTextField { (textField) in
-                textField.placeholder = "Password"
-                textField.isSecureTextEntry = true
-            }
-            alertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action) in
-                completionHandler(URLSession.AuthChallengeDisposition.cancelAuthenticationChallenge, nil)
-            }))
-            alertController.addAction(UIAlertAction(title: "Log In", style: .default, handler: { (action) in
-                if let user = alertController.textFields?.first?.text, let password = alertController.textFields?.last?.text {
-                    let credential = URLCredential(user:user, password:password, persistence:URLCredential.Persistence.none)
-                    completionHandler(URLSession.AuthChallengeDisposition.useCredential, credential)
-                } else {
-                    completionHandler(URLSession.AuthChallengeDisposition.cancelAuthenticationChallenge, nil)
+            if self.credential != nil {
+                completionHandler(URLSession.AuthChallengeDisposition.useCredential, self.credential)
+            } else {
+                let alertController = UIAlertController(title: nil, message: "Log in to companyweb", preferredStyle: .alert)
+                alertController.addTextField { (textField) in
+                    textField.placeholder = "User Name"
                 }
-            }))
-            present(alertController, animated: true, completion: nil)
+                alertController.addTextField { (textField) in
+                    textField.placeholder = "Password"
+                    textField.isSecureTextEntry = true
+                }
+                alertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action) in
+                    completionHandler(URLSession.AuthChallengeDisposition.cancelAuthenticationChallenge, nil)
+                }))
+                alertController.addAction(UIAlertAction(title: "Log In", style: .default, handler: { (action) in
+                    if let user = alertController.textFields?.first?.text, let password = alertController.textFields?.last?.text {
+                        self.credential = URLCredential(user:user, password:password, persistence:URLCredential.Persistence.none)
+                        completionHandler(URLSession.AuthChallengeDisposition.useCredential, self.credential)
+                    } else {
+                        completionHandler(URLSession.AuthChallengeDisposition.cancelAuthenticationChallenge, nil)
+                    }
+                }))
+                present(alertController, animated: true, completion: nil)
+            }
         } else {
             completionHandler(URLSession.AuthChallengeDisposition.performDefaultHandling, nil)
         }
