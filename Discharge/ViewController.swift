@@ -16,6 +16,8 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
     @IBOutlet var toolBar: UIToolbar!
     var forwardBtn: UIButton?
     var backBtn: UIButton?
+    var homeBtn: UIButton!
+    var dischargeBtn: UIButton!
     let url = URL(string:"https://home.mdnow.work/discharge")
     var webView: WKWebView!
     var credential: URLCredential?
@@ -37,8 +39,19 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
         items.append(
             UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
         )
-        let dischargeBtn = UIButton(type: .system)
-        dischargeBtn.setImage(UIImage(named: "home"), for: .normal)
+        homeBtn = UIButton(type: .system)
+        homeBtn.setImage(UIImage(named: "home"), for: .normal)
+        homeBtn.setTitle("Home", for: .normal)
+        homeBtn.addTarget(self, action: #selector(pressHome), for: .touchDown)
+        homeBtn.titleLabel?.font = UIFont.systemFont(ofSize: 10)
+        homeBtn.sizeToFit()
+        homeBtn.alignVertical()
+        let homeItem = UIBarButtonItem(customView: homeBtn)
+        items.append(
+            homeItem
+        )
+        dischargeBtn = UIButton(type: .system)
+        dischargeBtn.setImage(UIImage(named: "discharge"), for: .normal)
         dischargeBtn.setTitle("Discharge", for: .normal)
         dischargeBtn.addTarget(self, action: #selector(pressDischarge), for: .touchDown)
         dischargeBtn.titleLabel?.font = UIFont.systemFont(ofSize: 10)
@@ -96,6 +109,15 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        homeBtn.setImage(UIImage(named: "home"), for: .normal)
+        dischargeBtn.setImage(UIImage(named: "discharge"), for: .normal)
+        if let loadedURL = webView.url?.relativePath {
+            if(loadedURL == "/") {
+                homeBtn.setImage(UIImage(named: "home-filled"), for: .normal)
+            } else if(loadedURL == "/discharge") {
+                dischargeBtn.setImage(UIImage(named: "discharge-filled"), for: .normal)
+            }
+        }
         loadingSpinner.stopAnimating()
         if(!webView.canGoBack) {
             backBtn?.isEnabled = false
@@ -113,8 +135,15 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
         }
     }
     
+    @IBAction func pressHome() {
+        let home_url = URL(string:"https://home.mdnow.work")
+        let req = URLRequest(url:home_url!)
+        webView.load(req)
+    }
+    
     @IBAction func pressDischarge() {
-        let req = URLRequest(url:url!)
+        let discharge_url = URL(string:"https://home.mdnow.work/discharge")
+        let req = URLRequest(url:discharge_url!)
         webView.load(req)
     }
     
