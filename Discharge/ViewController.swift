@@ -18,6 +18,8 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
     var backBtn: UIButton?
     var homeBtn: UIButton!
     var dischargeBtn: UIButton!
+    //var orderdiagnosticBtn: UIButton!
+    var adminBtn: UIButton!
     let url = URL(string:"https://home.mdnow.work/discharge")
     var webView: WKWebView!
     var credential: URLCredential?
@@ -61,6 +63,31 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
         items.append(
             dischargeItem
         )
+        
+//        orderdiagnosticBtn = UIButton(type: .system)
+//        orderdiagnosticBtn.setImage(UIImage(named: "orderdiagnostic"), for: .normal)
+//        orderdiagnosticBtn.setTitle("Order", for: .normal)
+//        orderdiagnosticBtn.addTarget(self, action: #selector(pressOrderDiagnostic), for: .touchDown)
+//        orderdiagnosticBtn.titleLabel?.font = UIFont.systemFont(ofSize: 10)
+//        orderdiagnosticBtn.sizeToFit()
+//        orderdiagnosticBtn.alignVertical()
+//        let orderdiagnosticItem = UIBarButtonItem(customView: orderdiagnosticBtn)
+//        items.append(
+//            orderdiagnosticItem
+//        )
+        
+        adminBtn = UIButton(type: .system)
+        adminBtn.setImage(UIImage(named: "admin"), for: .normal)
+        adminBtn.setTitle("Admin", for: .normal)
+        adminBtn.addTarget(self, action: #selector(pressAdmin), for: .touchDown)
+        adminBtn.titleLabel?.font = UIFont.systemFont(ofSize: 10)
+        adminBtn.sizeToFit()
+        adminBtn.alignVertical()
+        let adminItem = UIBarButtonItem(customView: adminBtn)
+        items.append(
+            adminItem
+        )
+        
         let refreshBtn = UIButton(type: .system)
         refreshBtn.setImage(UIImage(named: "refresh"), for: .normal)
         refreshBtn.setTitle("Refresh", for: .normal)
@@ -111,11 +138,17 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         homeBtn.setImage(UIImage(named: "home"), for: .normal)
         dischargeBtn.setImage(UIImage(named: "discharge"), for: .normal)
+        //orderdiagnosticBtn.setImage(UIImage(named: "orderdiagnostic"), for: .normal)
+        adminBtn.setImage(UIImage(named: "admin"), for: .normal)
         if let loadedURL = webView.url?.relativePath {
             if(loadedURL == "/") {
                 homeBtn.setImage(UIImage(named: "home-filled"), for: .normal)
             } else if(loadedURL == "/discharge") {
                 dischargeBtn.setImage(UIImage(named: "discharge-filled"), for: .normal)
+            } else if(loadedURL == "/order-diagnostic") {
+                //orderdiagnosticBtn.setImage(UIImage(named: "orderdiagnostic-filled"), for: .normal)
+            } else if(loadedURL == "/admin") {
+                adminBtn.setImage(UIImage(named: "admin-filled"), for: .normal)
             }
         }
         loadingSpinner.stopAnimating()
@@ -144,6 +177,18 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
     @IBAction func pressDischarge() {
         let discharge_url = URL(string:"https://home.mdnow.work/discharge")
         let req = URLRequest(url:discharge_url!)
+        webView.load(req)
+    }
+    
+    @IBAction func pressOrderDiagnostic() {
+        let orderdiagnostic_url = URL(string:"https://home.mdnow.work/order-diagnostic")
+        let req = URLRequest(url:orderdiagnostic_url!)
+        webView.load(req)
+    }
+    
+    @IBAction func pressAdmin() {
+        let orderdiagnostic_url = URL(string:"https://home.mdnow.work/admin")
+        let req = URLRequest(url:orderdiagnostic_url!)
         webView.load(req)
     }
     
