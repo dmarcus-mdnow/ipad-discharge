@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Discharge.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>armv7</string>
+				<string>arm64</string>
+			</array>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>6D6DDB011343F0B38BB32BCBD19C062848B51504</string>
+				<key>dateExpires</key>
+				<string>8/21/20</string>
+				<key>type</key>
+				<string>iOS Distribution</string>
+			</dict>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>QC4H4SKF7Z.com.mdnow.dischargeipad</string>
+				<key>com.apple.developer.team-identifier</key>
+				<string>QC4H4SKF7Z</string>
+				<key>get-task-allow</key>
+				<false/>
+				<key>keychain-access-groups</key>
+				<array>
+					<string>QC4H4SKF7Z.com.mdnow.dischargeipad</string>
+				</array>
+			</dict>
+			<key>name</key>
+			<string>Discharge.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>0d3a3271-ebca-4998-adc5-4bff2194cb41</string>
+				<key>name</key>
+				<string>XC iOS: com.mdnow.dischargeipad</string>
+			</dict>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>QC4H4SKF7Z</string>
+				<key>name</key>
+				<string>MD Now Medical Centers, Inc</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

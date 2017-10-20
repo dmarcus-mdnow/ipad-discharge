@@ -18,6 +18,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
     var backBtn: UIButton?
     var homeBtn: UIButton!
     var dischargeBtn: UIButton!
+    var trackingBoardBtn: UIButton!
     //var orderdiagnosticBtn: UIButton!
     var adminBtn: UIButton!
     let url = URL(string:"https://home.mdnow.work/discharge")
@@ -62,6 +63,18 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
         let dischargeItem = UIBarButtonItem(customView: dischargeBtn)
         items.append(
             dischargeItem
+        )
+        
+        trackingBoardBtn = UIButton(type: .system)
+        trackingBoardBtn.setImage(UIImage(named: "trackingboard"), for: .normal)
+        trackingBoardBtn.setTitle("Tracking", for: .normal)
+        trackingBoardBtn.addTarget(self, action: #selector(pressTracking), for: .touchDown)
+        trackingBoardBtn.titleLabel?.font = UIFont.systemFont(ofSize: 10)
+        trackingBoardBtn.sizeToFit()
+        trackingBoardBtn.alignVertical()
+        let trackingBoardItem = UIBarButtonItem(customView: trackingBoardBtn)
+        items.append(
+            trackingBoardItem
         )
         
 //        orderdiagnosticBtn = UIButton(type: .system)
@@ -138,6 +151,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         homeBtn.setImage(UIImage(named: "home"), for: .normal)
         dischargeBtn.setImage(UIImage(named: "discharge"), for: .normal)
+        trackingBoardBtn.setImage(UIImage(named: "trackingboard"), for: .normal)
         //orderdiagnosticBtn.setImage(UIImage(named: "orderdiagnostic"), for: .normal)
         adminBtn.setImage(UIImage(named: "admin"), for: .normal)
         if let loadedURL = webView.url?.relativePath {
@@ -149,6 +163,8 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
                 //orderdiagnosticBtn.setImage(UIImage(named: "orderdiagnostic-filled"), for: .normal)
             } else if(loadedURL == "/admin") {
                 adminBtn.setImage(UIImage(named: "admin-filled"), for: .normal)
+            } else if(loadedURL == "/tracking-board") {
+                trackingBoardBtn.setImage(UIImage(named: "trackingboard-filled"), for: .normal)
             }
         }
         loadingSpinner.stopAnimating()
@@ -177,6 +193,12 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
     @IBAction func pressDischarge() {
         let discharge_url = URL(string:"https://home.mdnow.work/discharge")
         let req = URLRequest(url:discharge_url!)
+        webView.load(req)
+    }
+    
+    @IBAction func pressTracking() {
+        let trackingboard_url = URL(string:"https://home.mdnow.work/tracking-board")
+        let req = URLRequest(url:trackingboard_url!)
         webView.load(req)
     }
     
@@ -277,6 +299,13 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
         } else {
             completionHandler(URLSession.AuthChallengeDisposition.performDefaultHandling, nil)
         }
+    }
+    
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        loadingSpinner.stopAnimating()
+        let alertController = UIAlertController(title: "Not Connected to Internet", message: error.localizedDescription, preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default,handler: nil))
+        self.present(alertController, animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {
